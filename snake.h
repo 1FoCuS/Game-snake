@@ -3,23 +3,31 @@
 
 #include <QWidget>
 #include <QKeyEvent>
+#include <QPainter>
+#include <QTime>
+#include <QPushButton>
 
 class Snake : public QWidget
 {
+    //Q_OBJECT
 public:
     Snake(QWidget *parent = nullptr);
-    ~Snake();
+    virtual ~Snake() {};
+private slots:
+         void initGame();
 protected:
     void paintEvent(QPaintEvent *);
     void timerEvent(QTimerEvent *);
     void keyPressEvent(QKeyEvent *);
 private:
+    QPushButton *button_start = nullptr;
+
     QImage dot;
-    QImage head;
+    QImage head_snake;
     QImage apple;
 
-    static const int B_WIDTH    = 300;  //< size playground
-    static const int B_HEIGHT   = 300;
+    static const int B_WIDTH    = 500;  //< size playground
+    static const int B_HEIGHT   = 500;
     static const int DOT_SIZE   = 10;   //< size apple and snake parts
     static const int ALL_DOTS   = (B_WIDTH*B_HEIGHT) / (DOT_SIZE*DOT_SIZE);
     static const int RAND_POS   = 29;   //< for random
@@ -40,12 +48,14 @@ private:
     bool inGame;
 
     void loadImages();
-    void initGame();
+
     void locateApple();
     void checkApple();
     void checkCollision();
     void move();
     void doDrawing();
     void gameOver(QPainter &);
+
+    void create_button_start();
 };
 #endif // SNAKE_H

@@ -1,11 +1,11 @@
 #include "snake.h"
-#include <QPainter>
-#include <QTime>
 
 Snake::Snake(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("background-color:black;");
+    create_button_start();
+
     leftDirection = false;
     rightDirection = true;
     upDirection = false;
@@ -14,18 +14,20 @@ Snake::Snake(QWidget *parent)
 
     resize(B_WIDTH, B_HEIGHT);
     loadImages();
-    initGame();
+
+    connect(button_start, &QPushButton::clicked, this, &Snake::initGame);
 }
 
 void Snake::loadImages()
 {
-    dot.load("dot.png");
-    head.load("head.png");
     apple.load("apple.png");
+    dot.load("dot.png");
+    head_snake.load("head.png");
 }
 
 void Snake::initGame()
 {
+    if (button_start!=nullptr) delete button_start;
     dots = 3;
     for (int z = 0; z < dots; z++)
     {
@@ -129,7 +131,7 @@ void Snake::doDrawing()
         {
             if (z == 0)
             {
-                qp.drawImage(x[z], y[z], head);
+                qp.drawImage(x[z], y[z], head_snake);
             } else
             {
                 qp.drawImage(x[z], y[z], dot);
@@ -156,6 +158,10 @@ void Snake::gameOver(QPainter &qp)
 
     qp.translate(QPoint(w/2, h/2));
     qp.drawText(-textWidth/2, 0, message);
+
+//    button_start = new QPushButton("start", this);
+//    button_start->setGeometry(50, 40, 75, 30);
+//    connect(button_start, &QPushButton::clicked, this, &Snake::initGame);
 }
 
 void Snake::locateApple()
@@ -218,7 +224,9 @@ void Snake::keyPressEvent(QKeyEvent *e)
     QWidget::keyPressEvent(e);
 }
 
-Snake::~Snake()
+void Snake::create_button_start()
 {
+    button_start = new QPushButton("START GAME", this);
+    button_start->setStyleSheet("background-color: rgb(111,128,105);");
+    button_start->setGeometry(B_WIDTH/2-50, B_HEIGHT/2-25, 100, 50);
 }
-
