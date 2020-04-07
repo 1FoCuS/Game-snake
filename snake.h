@@ -1,6 +1,7 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
+#include <QApplication>
 #include <QWidget>
 #include <QKeyEvent>
 #include <QPainter>
@@ -22,6 +23,7 @@ protected:
     void keyPressEvent(QKeyEvent *);
 private:
     QPushButton *button_start = nullptr;
+    QPushButton *button_exit = nullptr;
 
     QImage dot;
     QImage head_snake;
@@ -60,5 +62,6 @@ private:
     void gameOver(QPainter &);
 
     void create_button_start();
+    void create_button_exit();
 };
 #endif // SNAKE_H

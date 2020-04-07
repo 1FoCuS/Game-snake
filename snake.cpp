@@ -14,6 +14,7 @@ Snake::Snake(QWidget *parent)
     loadImages();
 
     create_button_start();
+    create_button_exit();
 }
 
 void Snake::loadImages()
@@ -27,8 +28,13 @@ void Snake::initGame()
 {
     inGame = true;
     is_defeat = false;
-    if (button_start!=nullptr) delete button_start;
-
+    if (button_start!=nullptr)
+    {
+        button_start->setVisible(false);
+        button_start->setEnabled(false);
+        button_exit->setVisible(false);
+        button_exit->setEnabled(false);
+    }
     dots = 3;
     for (int z = 0; z < dots; z++)
     {
@@ -164,6 +170,11 @@ void Snake::gameOver(QPainter &qp)
 
     qp.translate(QPoint(w/2, h/2));
     qp.drawText(-textWidth/2, 0, message);
+
+    button_start->setVisible(true);
+    button_start->setEnabled(true);
+    button_exit->setVisible(true);
+    button_exit->setEnabled(true);
 }
 
 void Snake::locate_new_apple()
@@ -230,6 +241,16 @@ void Snake::create_button_start()
 {
     button_start = new QPushButton("START GAME", this);
     button_start->setStyleSheet("background-color: rgb(111,128,105);");
-    button_start->setGeometry(B_WIDTH/2-50, B_HEIGHT/2-25, 100, 50);
+    button_start->setGeometry(B_WIDTH/4-50, 3*B_HEIGHT/4-25, 100, 50);
+
     connect(button_start, &QPushButton::clicked, this, &Snake::initGame);
+}
+
+void Snake::create_button_exit()
+{
+    button_exit = new QPushButton("EXIT", this);
+    button_exit->setStyleSheet("background-color: rgb(111,128,105);");
+    button_exit->setGeometry(3*B_WIDTH/4-50, 3*B_HEIGHT/4-25, 100, 50);
+
+    connect(button_exit, &QPushButton::clicked, this, &QApplication::quit);
 }
