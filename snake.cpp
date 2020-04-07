@@ -4,18 +4,16 @@ Snake::Snake(QWidget *parent)
     : QWidget(parent)
 {
     setStyleSheet("background-color:black;");
-    create_button_start();
 
     leftDirection = false;
     rightDirection = true;
     upDirection = false;
     downDirection = false;
-    inGame = true;
 
     resize(B_WIDTH, B_HEIGHT);
     loadImages();
 
-    connect(button_start, &QPushButton::clicked, this, &Snake::initGame);
+    create_button_start();
 }
 
 void Snake::loadImages()
@@ -27,7 +25,10 @@ void Snake::loadImages()
 
 void Snake::initGame()
 {
+    inGame = true;
+    is_defeat = false;
     if (button_start!=nullptr) delete button_start;
+
     dots = 3;
     for (int z = 0; z < dots; z++)
     {
@@ -35,7 +36,7 @@ void Snake::initGame()
         y[z] = 50;
     }
 
-    locateApple();
+    locate_new_apple();
 
     timerId = startTimer(DELAY);
 }
@@ -46,7 +47,7 @@ void Snake::checkApple()
     if ((x[0] == apple_x) && (y[0] == apple_y))
     {
         dots++;
-        locateApple();
+        locate_new_apple();
     }
 }
 
@@ -86,27 +87,32 @@ void Snake::checkCollision()
         if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z]))
         {
             inGame = false;
+            is_defeat = true;
         }
     }
 
     if (y[0] >= B_HEIGHT)
     {
         inGame = false;
+        is_defeat = true;
     }
 
     if (y[0] < 0)
     {
         inGame = false;
+        is_defeat = true;
     }
 
     if (x[0] >= B_WIDTH)
     {
         inGame = false;
+        is_defeat = true;
     }
 
     if (x[0] < 0)
     {
         inGame = false;
+        is_defeat = true;
     }
 
     if(!inGame)
@@ -118,10 +124,10 @@ void Snake::checkCollision()
 void Snake::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e);
-    doDrawing();
+    drawing_playground();
 }
 
-void Snake::doDrawing()
+void Snake::drawing_playground()
 {
     QPainter qp(this);
     if (inGame)
@@ -140,7 +146,7 @@ void Snake::doDrawing()
 
     } else
     {
-        gameOver(qp);
+        if (is_defeat) gameOver(qp);
     }
 }
 
@@ -158,13 +164,9 @@ void Snake::gameOver(QPainter &qp)
 
     qp.translate(QPoint(w/2, h/2));
     qp.drawText(-textWidth/2, 0, message);
-
-//    button_start = new QPushButton("start", this);
-//    button_start->setGeometry(50, 40, 75, 30);
-//    connect(button_start, &QPushButton::clicked, this, &Snake::initGame);
 }
 
-void Snake::locateApple()
+void Snake::locate_new_apple()
 {
     QTime time = QTime::currentTime();
     qsrand((uint) time.msec());
@@ -229,4 +231,5 @@ void Snake::create_button_start()
     button_start = new QPushButton("START GAME", this);
     button_start->setStyleSheet("background-color: rgb(111,128,105);");
     button_start->setGeometry(B_WIDTH/2-50, B_HEIGHT/2-25, 100, 50);
+    connect(button_start, &QPushButton::clicked, this, &Snake::initGame);
 }

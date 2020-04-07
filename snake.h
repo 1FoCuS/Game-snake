@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QTime>
 #include <QPushButton>
+#include <array>
 
 class Snake : public QWidget
 {
@@ -26,34 +27,36 @@ private:
     QImage head_snake;
     QImage apple;
 
-    static const int B_WIDTH    = 500;  //< size playground
-    static const int B_HEIGHT   = 500;
-    static const int DOT_SIZE   = 10;   //< size apple and snake parts
-    static const int ALL_DOTS   = (B_WIDTH*B_HEIGHT) / (DOT_SIZE*DOT_SIZE);
-    static const int RAND_POS   = 29;   //< for random
-    static const int DELAY      = 140;  //< game speed
+    static constexpr int B_WIDTH    = 500;  //< size playground
+    static constexpr int B_HEIGHT   = 500;
+    static constexpr int DOT_SIZE   = 10;   //< size apple and snake parts
+    static constexpr int ALL_DOTS   = (B_WIDTH*B_HEIGHT) / (DOT_SIZE*DOT_SIZE);
+    static constexpr int RAND_POS   = 29;   //< for random
+    static constexpr int DELAY      = 140;  //< game speed
 
     int timerId;
     int dots;
+
+    std::array<int, ALL_DOTS> x;    //< position all parts snake
+    std::array<int, ALL_DOTS> y;
     int apple_x;
     int apple_y;
 
-    int x[ALL_DOTS];    //< position oll parts snake
-    int y[ALL_DOTS];
 
     bool leftDirection;
     bool rightDirection;
     bool upDirection;
     bool downDirection;
-    bool inGame;
+    bool inGame = false;
+    bool is_defeat = false;
 
     void loadImages();
 
-    void locateApple();
+    void locate_new_apple();
     void checkApple();
     void checkCollision();
     void move();
-    void doDrawing();
+    void drawing_playground();
     void gameOver(QPainter &);
 
     void create_button_start();
